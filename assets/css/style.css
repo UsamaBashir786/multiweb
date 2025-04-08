@@ -1,0 +1,427 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
+:root {
+  --primary-color: #4e73df;
+  --secondary-color: #1cc88a;
+  --dark-color: #5a5c69;
+  --light-color: #f8f9fc;
+}
+.headline {
+  left: 130px;
+} 
+.clipped {
+  clip-path: polygon(50% 0, 100% 0, 100% 100%, 0% 100%);
+}
+@media screen and (max-width: 650px){
+  .headline {
+    left: 20px;
+  } 
+  .clipped {
+    clip-path: none;
+    max-height: 300px !important;
+  }
+}
+.login-container {
+  max-width: 450px;
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+}
+.card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: none;
+  padding: 25px 25px 0;
+  text-align: center;
+}
+
+.card-header h2 {
+  color: var(--dark-color);
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.card-header p {
+  color: #858796;
+  margin-top: 10px;
+}
+
+.card-body {
+  padding: 25px;
+}
+
+.form-floating {
+  margin-bottom: 20px;
+}
+
+.form-floating > .form-control {
+  padding: 1.5rem 1rem;
+  height: calc(3.5rem + 2px);
+  border-radius: 10px;
+  border: 1px solid #e3e6f0;
+}
+
+.form-floating > label {
+  padding: 1rem;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.1);
+}
+
+.btn-login {
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+}
+
+.btn-login:hover {
+  background-color: #2e59d9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #e3e6f0;
+}
+
+.divider span {
+  position: relative;
+  background-color: white;
+  padding: 0 15px;
+  color: #858796;
+}
+
+.social-login {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  color: white;
+  font-size: 20px;
+  transition: all 0.3s;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.social-btn.google {
+  background-color: #ea4335;
+}
+
+.social-btn.facebook {
+  background-color: #3b5998;
+}
+
+.social-btn.twitter {
+  background-color: #1da1f2;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.footer-links a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.footer-links a:hover {
+  color: #2e59d9;
+  text-decoration: underline;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.register-link a {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.register-link a:hover {
+  color: #2e59d9;
+  text-decoration: underline;
+}
+
+/* Animation */
+.card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Floating label animation */
+.form-floating input:focus + label,
+.form-floating input:not(:placeholder-shown) + label {
+  color: var(--primary-color);
+}
+
+.register-container {
+  max-width: 450px;
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+}
+
+.card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: none;
+  padding: 25px 25px 0;
+  text-align: center;
+}
+
+.card-header h2 {
+  color: var(--dark-color);
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.card-header p {
+  color: #858796;
+  margin-top: 10px;
+}
+
+.card-body {
+  padding: 25px;
+}
+
+.form-floating {
+  margin-bottom: 20px;
+}
+
+.form-floating > .form-control {
+  padding: 1.5rem 1rem;
+  height: calc(3.5rem + 2px);
+  border-radius: 10px;
+  border: 1px solid #e3e6f0;
+}
+
+.form-floating > label {
+  padding: 1rem;
+}
+
+.form-control:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 0.25rem rgba(28, 200, 138, 0.1);
+}
+
+.btn-register {
+  background-color: var(--secondary-color);
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+}
+
+.btn-register:hover {
+  background-color: #169e6c;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #e3e6f0;
+}
+
+.divider span {
+  position: relative;
+  background-color: white;
+  padding: 0 15px;
+  color: #858796;
+}
+
+.social-register {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  color: white;
+  font-size: 20px;
+  transition: all 0.3s;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.social-btn.google {
+  background-color: #ea4335;
+}
+
+.social-btn.facebook {
+  background-color: #3b5998;
+}
+
+.social-btn.twitter {
+  background-color: #1da1f2;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-link a {
+  color: var(--secondary-color);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.login-link a:hover {
+  color: #169e6c;
+  text-decoration: underline;
+}
+
+.password-requirements {
+  font-size: 12px;
+  color: #858796;
+  margin-top: -15px;
+  margin-bottom: 20px;
+}
+
+.password-requirements ul {
+  padding-left: 15px;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.form-check {
+  margin-bottom: 20px;
+}
+
+.form-check-input:checked {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+/* Animation */
+.card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Progress bar */
+.password-strength {
+  height: 5px;
+  margin-top: -15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.password-strength .progress-bar {
+  transition: width 0.3s ease;
+}
+
+/* Floating label animation */
+.form-floating input:focus + label,
+.form-floating input:not(:placeholder-shown) + label {
+  color: var(--secondary-color);
+}
