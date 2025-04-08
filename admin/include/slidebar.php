@@ -1,4 +1,3 @@
-
 <style>
   body,
   html {
@@ -161,14 +160,17 @@
   .mobile-toggle:hover {
     color: #fff;
   }
-.targeting-btn{
-  display: none;
-}
+
+  .targeting-btn {
+    display: none;
+  }
+
   /* Responsive styles */
   @media (max-width: 768px) {
-    .targeting-btn{
+    .targeting-btn {
       display: block;
     }
+
     .sidebar {
       margin-left: -250px;
     }
@@ -201,7 +203,7 @@
     }
   }
 </style>
-<button class="mobile-toggle" id="sidebarMobileToggle" >
+<button class="mobile-toggle" id="sidebarMobileToggle">
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <line x1="3" y1="12" x2="21" y2="12"></line>
     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -241,9 +243,6 @@
           </svg>
           Categories
         </div>
-        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dropdown-icon">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg> -->
       </div>
       <div class="custom-dropdown-menu">
         <a href="add-category.php" class="dropdown-item">Add Category</a>
@@ -261,14 +260,29 @@
           </svg>
           Stories
         </div>
-        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dropdown-icon">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg> -->
+
       </div>
       <div class="custom-dropdown-menu">
         <a href="add_story.php" class="dropdown-item">Add Story</a>
         <a href="manage-stories.php" class="dropdown-item">Manage Story</a>
         <!-- <a href="#addArticleCategory" class="dropdown-item">Add Article Category</a> -->
+      </div>
+    </li>
+    <li class="dropdown">
+      <div class="dropdown-toggle">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          Comments
+        </div>
+
+      </div>
+      <div class="custom-dropdown-menu">
+        <a href="comments.php" class="dropdown-item">All Comments</a>
+        <!-- <a href="manage-comments.php?status=pending" class="dropdown-item">Pending Comments</a> -->
+        <!-- <a href="manage-comments.php?status=approved" class="dropdown-item">Approved Comments</a> -->
+        <!-- <a href="manage-comments.php?status=spam" class="dropdown-item">Spam Comments</a> -->
       </div>
     </li>
     <li>

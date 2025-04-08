@@ -1,152 +1,184 @@
 <?php
-// Categories for articles
-$categories = ['All', 'Technology', 'Business', 'Politics', 'Entertainment', 'Health', 'Science', 'Sports', 'Lifestyle'];
+session_start();
+include 'config/db.php';
 
-// Get the current category from URL parameter, default to 'All'
-$current_category = isset($_GET['category']) ? $_GET['category'] : 'All';
-
-// In a real implementation, you would fetch articles from a database
-// For now, we'll use dummy data for demonstration
-$articles = [
-  // Technology Articles
-  [
-    'id' => 1,
-    'title' => 'Major Breakthrough in Renewable Energy Research',
-    'category' => 'Technology',
-    'author' => 'John Doe',
-    'date' => 'April 8, 2025',
-    'views' => '2.4K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'A team of international researchers has announced a major breakthrough in renewable energy technology that could revolutionize how solar power is harnessed...'
-  ],
-  [
-    'id' => 2,
-    'title' => 'AI Assistants Becoming More Human-Like',
-    'category' => 'Technology',
-    'author' => 'Sarah Johnson',
-    'date' => 'April 7, 2025',
-    'views' => '1.8K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'Latest advancements in natural language processing have led to AI assistants that can understand context and respond in increasingly human-like ways...'
-  ],
-  [
-    'id' => 3,
-    'title' => '5G Networks Expand to Rural Areas',
-    'category' => 'Technology',
-    'author' => 'Michael Chen',
-    'date' => 'April 6, 2025',
-    'views' => '1.5K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'New infrastructure initiatives bring high-speed connectivity to previously underserved rural communities across the country...'
-  ],
-
-  // Business Articles
-  [
-    'id' => 4,
-    'title' => 'Global Market Trends Show Economic Recovery',
-    'category' => 'Business',
-    'author' => 'Emma Wilson',
-    'date' => 'April 7, 2025',
-    'views' => '1.2K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'Recent market indicators point to a strong economic recovery across global markets, with growth projections exceeding earlier forecasts...'
-  ],
-  [
-    'id' => 5,
-    'title' => 'Major Company Announces Expansion Plans',
-    'category' => 'Business',
-    'author' => 'Robert Johnson',
-    'date' => 'April 5, 2025',
-    'views' => '980',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'One of the world\'s leading technology companies has announced plans to expand operations with new offices in three countries...'
-  ],
-
-  // Politics Articles
-  [
-    'id' => 6,
-    'title' => 'New Policy Reforms Proposed by Government',
-    'category' => 'Politics',
-    'author' => 'Thomas Wilson',
-    'date' => 'April 7, 2025',
-    'views' => '2.1K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'The government has unveiled a comprehensive package of policy reforms aimed at addressing economic inequality and environmental challenges...'
-  ],
-  [
-    'id' => 7,
-    'title' => 'International Relations Strengthen Between Nations',
-    'category' => 'Politics',
-    'author' => 'Jessica Miller',
-    'date' => 'April 4, 2025',
-    'views' => '1.7K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'A series of diplomatic breakthroughs has led to improved relations between previously conflicting nations, with new trade agreements...'
-  ],
-
-  // Entertainment Articles
-  [
-    'id' => 8,
-    'title' => 'Award-Winning Film Director Announces New Project',
-    'category' => 'Entertainment',
-    'author' => 'David Kim',
-    'date' => 'April 6, 2025',
-    'views' => '3.5K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'The acclaimed director behind last year\'s Oscar-winning film has announced their next project, a science fiction epic...'
-  ],
-  [
-    'id' => 9,
-    'title' => 'Music Festival Announces Incredible Lineup for Summer',
-    'category' => 'Entertainment',
-    'author' => 'Sophia Rodriguez',
-    'date' => 'April 5, 2025',
-    'views' => '4.2K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'One of the world\'s most popular music festivals has revealed its lineup for this summer, featuring several chart-topping artists...'
-  ],
-
-  // Health Articles
-  [
-    'id' => 10,
-    'title' => 'New Study Reveals Health Benefits of Mediterranean Diet',
-    'category' => 'Health',
-    'author' => 'Emily Santos',
-    'date' => 'April 8, 2025',
-    'views' => '2.3K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'A comprehensive new study has found additional health benefits associated with the Mediterranean diet, particularly for heart health...'
-  ],
-  [
-    'id' => 11,
-    'title' => 'Breakthrough in Alzheimer\'s Research Shows Promise',
-    'category' => 'Health',
-    'author' => 'Dr. James Wilson',
-    'date' => 'April 6, 2025',
-    'views' => '3.1K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'Scientists have reported a significant breakthrough in understanding the mechanisms behind Alzheimer\'s disease, potentially opening new treatment pathways...'
-  ]
-];
-
-// Filter articles by category if not 'All'
-if ($current_category !== 'All') {
-  $filtered_articles = array_filter($articles, function ($article) use ($current_category) {
-    return $article['category'] === $current_category;
-  });
-} else {
-  $filtered_articles = $articles;
+// Check if story ID is provided
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+  header("Location: stories.php");
+  exit;
 }
 
-// Pagination settings
-$articles_per_page = 6;
-$total_articles = count($filtered_articles);
-$total_pages = ceil($total_articles / $articles_per_page);
-$current_page = isset($_GET['page']) ? max(1, min($_GET['page'], $total_pages)) : 1;
-$offset = ($current_page - 1) * $articles_per_page;
+$story_id = intval($_GET['id']);
 
-// Get articles for current page
-$paged_articles = array_slice($filtered_articles, $offset, $articles_per_page);
+// Fetch story from database
+$sql = "SELECT s.*, DATE_FORMAT(s.created_at, '%M %d, %Y') as formatted_date 
+        FROM stories s 
+        WHERE s.id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $story_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Check if story exists
+if ($result->num_rows == 0) {
+  header("Location: stories.php");
+  exit;
+}
+
+$story = $result->fetch_assoc();
+
+// Update view count
+$update_views = "UPDATE stories SET view_count = view_count + 1 WHERE id = ?";
+$stmt = $conn->prepare($update_views);
+$stmt->bind_param("i", $story_id);
+$stmt->execute();
+
+// Format view count for display
+$view_count = $story['view_count'];
+if ($view_count >= 1000) {
+  $formatted_views = number_format($view_count / 1000, 1) . 'K';
+} else {
+  $formatted_views = $view_count;
+}
+
+// Get related stories
+$related_sql = "SELECT id, title, author, image, view_count, DATE_FORMAT(created_at, '%M %d, %Y') as formatted_date 
+                FROM stories 
+                WHERE id != ? 
+                ORDER BY RAND() 
+                LIMIT 3";
+$stmt = $conn->prepare($related_sql);
+$stmt->bind_param("i", $story_id);
+$stmt->execute();
+$related_result = $stmt->get_result();
+$related_stories = [];
+
+while ($row = $related_result->fetch_assoc()) {
+  // Format view count for display
+  if ($row['view_count'] >= 1000) {
+    $row['views'] = number_format($row['view_count'] / 1000, 1) . 'K';
+  } else {
+    $row['views'] = $row['view_count'];
+  }
+
+  // Set default image if none exists
+  if (empty($row['image'])) {
+    $row['image'] = 'https://via.placeholder.com/800x500';
+  }
+
+  $related_stories[] = $row;
+}
+
+// Get story categories (for sidebar filter)
+$story_categories = ['All Stories', 'Travel', 'Culture', 'Adventure', 'Science', 'Personal', 'Historical', 'Nature'];
+
+// Assign a random category for the story for demo purposes
+// In production, you would have a proper category column
+if (!isset($story['category'])) {
+  $category_index = array_rand(array_slice($story_categories, 1)); // Skip 'All Stories'
+  $story['category'] = $story_categories[$category_index + 1];
+}
+
+// Process comment submission
+$comment_message = '';
+$comment_error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
+  $name = trim($_POST['name']);
+  $email = trim($_POST['email']);
+  $comment = trim($_POST['comment']);
+
+  // Fix for parent_id - properly handle empty values
+  $parent_id = null;
+  if (isset($_POST['parent_id']) && !empty($_POST['parent_id'])) {
+    $parent_id = intval($_POST['parent_id']);
+
+    // Verify that the parent comment exists
+    $check_parent = "SELECT id FROM comments WHERE id = ? AND story_id = ?";
+    $stmt = $conn->prepare($check_parent);
+    $stmt->bind_param("ii", $parent_id, $story_id);
+    $stmt->execute();
+    $parent_result = $stmt->get_result();
+
+    if ($parent_result->num_rows == 0) {
+      // Parent comment doesn't exist, clear parent_id
+      $parent_id = null;
+    }
+  }
+
+  // Simple validation
+  if (empty($name) || empty($email) || empty($comment)) {
+    $comment_error = "Please fill in all fields.";
+  } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $comment_error = "Please enter a valid email address.";
+  } else {
+    // Prepare SQL with or without parent_id
+    if ($parent_id === null) {
+      $comment_sql = "INSERT INTO comments (story_id, name, email, comment, status) 
+                     VALUES (?, ?, ?, ?, 'pending')";
+      $stmt = $conn->prepare($comment_sql);
+      $stmt->bind_param("isss", $story_id, $name, $email, $comment);
+    } else {
+      $comment_sql = "INSERT INTO comments (story_id, parent_id, name, email, comment, status) 
+                     VALUES (?, ?, ?, ?, ?, 'pending')";
+      $stmt = $conn->prepare($comment_sql);
+      $stmt->bind_param("iisss", $story_id, $parent_id, $name, $email, $comment);
+    }
+
+    if ($stmt->execute()) {
+      $comment_message = "Your comment has been submitted and is awaiting moderation.";
+      // Clear form data after successful submission
+      $name = $email = $comment = '';
+    } else {
+      $comment_error = "Error submitting comment: " . $conn->error;
+    }
+  }
+}
+
+// Get comments for this story
+$comments_sql = "SELECT c.*, DATE_FORMAT(c.created_at, '%M %d, %Y at %h:%i %p') as formatted_date 
+                FROM comments c 
+                WHERE c.story_id = ? AND c.parent_id IS NULL AND c.status = 'approved'
+                ORDER BY c.created_at DESC";
+$stmt = $conn->prepare($comments_sql);
+$stmt->bind_param("i", $story_id);
+$stmt->execute();
+$comments_result = $stmt->get_result();
+$comments = [];
+
+// Function to get comment replies
+function getCommentReplies($conn, $parent_id, $story_id)
+{
+  $replies_sql = "SELECT c.*, DATE_FORMAT(c.created_at, '%M %d, %Y at %h:%i %p') as formatted_date 
+                 FROM comments c 
+                 WHERE c.parent_id = ? AND c.story_id = ? AND c.status = 'approved'
+                 ORDER BY c.created_at ASC";
+  $stmt = $conn->prepare($replies_sql);
+  $stmt->bind_param("ii", $parent_id, $story_id);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  $replies = [];
+  while ($reply = $result->fetch_assoc()) {
+    $replies[] = $reply;
+  }
+
+  return $replies;
+}
+
+// Count total approved comments including replies
+$count_sql = "SELECT COUNT(*) as total FROM comments WHERE story_id = ? AND status = 'approved'";
+$stmt = $conn->prepare($count_sql);
+$stmt->bind_param("i", $story_id);
+$stmt->execute();
+$count_result = $stmt->get_result();
+$comment_count = $count_result->fetch_assoc()['total'];
+
+// Build comments array with replies
+while ($comment = $comments_result->fetch_assoc()) {
+  $comment['replies'] = getCommentReplies($conn, $comment['id'], $story_id);
+  $comments[] = $comment;
+}
 ?>
 
 <!DOCTYPE html>
@@ -154,273 +186,65 @@ $paged_articles = array_slice($filtered_articles, $offset, $articles_per_page);
 
 <head>
   <?php include 'include/css-links.php' ?>
-
-</head>
-
-<body>
-  <!-- navbar -->
-  <?php include 'include/navbar.php' ?>
-
-  <!--
-  ================== 
-  Page Header
-  ===================
-  -->
-  <section class="bg-light py-5 mb-5">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6">
-          <h1 class="display-4 fw-bold mb-3">Articles</h1>
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-              <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none" style="color: #9B5DE5;">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Articles</li>
-              <?php if ($current_category !== 'All'): ?>
-                <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($current_category) ?></li>
-              <?php endif; ?>
-            </ol>
-          </nav>
-        </div>
-        <div class="col-lg-6">
-          <div class="d-flex justify-content-lg-end mt-4 mt-lg-0">
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search articles..." aria-label="Search">
-              <button class="btn" type="submit" style="background-color: #9B5DE5; color: white;">
-                <i class="fas fa-search"></i>
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!--
-  ================== 
-  Articles Content
-  ===================
-  -->
-  <div class="container mb-5">
-    <div class="row">
-      <!-- Main Content -->
-      <div class="col-lg-8">
-        <!-- Category Filters -->
-        <div class="mb-4 category-filters">
-          <div class="d-flex flex-wrap">
-            <?php foreach ($categories as $category): ?>
-              <a href="articles.php?category=<?= urlencode($category) ?>"
-                class="btn me-2 mb-2 <?= $category === $current_category ? 'active' : '' ?>"
-                style="<?= $category === $current_category ? 'background-color: #9B5DE5; color: white;' : 'background-color: #f8f9fa; color: #333;' ?>">
-                <?= htmlspecialchars($category) ?>
-              </a>
-            <?php endforeach; ?>
-          </div>
-        </div>
-
-        <!-- Articles Grid -->
-        <div class="row">
-          <?php if (empty($paged_articles)): ?>
-            <div class="col-12">
-              <div class="alert alert-info">
-                No articles found for this category. Please try another category.
-              </div>
-            </div>
-          <?php else: ?>
-            <?php foreach ($paged_articles as $article): ?>
-              <div class="col-md-6 mb-4">
-                <div class="card h-100 border-0 shadow-sm">
-                  <img src="<?= htmlspecialchars($article['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($article['title']) ?>">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between mb-2">
-                      <span class="badge mb-1" style="background-color: #9B5DE5;"><?= htmlspecialchars($article['category']) ?></span>
-                      <small class="text-muted"><i class="fas fa-eye me-1"></i> <?= htmlspecialchars($article['views']) ?> views</small>
-                    </div>
-                    <h5 class="card-title">
-                      <a href="article.php?id=<?= $article['id'] ?>" class="text-decoration-none text-dark">
-                        <?= htmlspecialchars($article['title']) ?>
-                      </a>
-                    </h5>
-                    <p class="card-text"><?= htmlspecialchars($article['excerpt']) ?></p>
-                  </div>
-                  <div class="card-footer bg-white border-0">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div class="d-flex align-items-center">
-                        <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="Author" width="30" height="30">
-                        <small class="text-muted"><?= htmlspecialchars($article['author']) ?></small>
-                      </div>
-                      <small class="text-muted"><i class="far fa-clock me-1"></i> <?= htmlspecialchars($article['date']) ?></small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          <?php endif; ?>
-        </div>
-
-        <!-- Pagination -->
-        <?php if ($total_pages > 1): ?>
-          <nav aria-label="Articles pagination" class="mt-5">
-            <ul class="pagination justify-content-center">
-              <li class="page-item <?= $current_page <= 1 ? 'disabled' : '' ?>">
-                <a class="page-link" href="articles.php?category=<?= urlencode($current_category) ?>&page=<?= $current_page - 1 ?>" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-
-              <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <li class="page-item <?= $i === $current_page ? 'active' : '' ?>">
-                  <a class="page-link" href="articles.php?category=<?= urlencode($current_category) ?>&page=<?= $i ?>"
-                    style="<?= $i === $current_page ? 'background-color: #9B5DE5; border-color: #9B5DE5;' : '' ?>">
-                    <?= $i ?>
-                  </a>
-                </li>
-              <?php endfor; ?>
-
-              <li class="page-item <?= $current_page >= $total_pages ? 'disabled' : '' ?>">
-                <a class="page-link" href="articles.php?category=<?= urlencode($current_category) ?>&page=<?= $current_page + 1 ?>" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        <?php endif; ?>
-      </div>
-
-      <!-- Sidebar -->
-      <div class="col-lg-4 mt-5 mt-lg-0">
-        <!-- Featured Article -->
-        <div class="card border-0 shadow-sm mb-4">
-          <div class="card-header bg-white border-0">
-            <h5 class="mb-0">Featured Article</h5>
-          </div>
-          <img src="https://via.placeholder.com/600x400" class="card-img-top" alt="Featured Article">
-          <div class="card-body">
-            <span class="badge mb-2" style="background-color: #9B5DE5;">Technology</span>
-            <h5 class="card-title">Quantum Computing Advancements Promise Energy Optimization</h5>
-            <p class="card-text">Recent breakthroughs in quantum computing technology are showing promising applications in energy grid optimization...</p>
-            <div class="d-flex justify-content-between align-items-center mt-3">
-              <small class="text-muted"><i class="far fa-clock me-1"></i> April 3, 2025</small>
-              <a href="#" class="btn" style="background-color: #9B5DE5; color: white;">Read Article</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Popular Tags -->
-        <div class="card border-0 shadow-sm mb-4">
-          <div class="card-header bg-white border-0">
-            <h5 class="mb-0">Popular Tags</h5>
-          </div>
-          <div class="card-body">
-            <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Technology</a>
-            <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Science</a>
-            <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Politics</a>
-            <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Business</a>
-            <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Health</a>
-            <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Environment</a>
-            <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Education</a>
-            <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Entertainment</a>
-            <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Sports</a>
-            <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Lifestyle</a>
-          </div>
-        </div>
-
-        <!-- Popular Articles -->
-        <div class="card border-0 shadow-sm mb-4">
-          <div class="card-header bg-white border-0">
-            <h5 class="mb-0">Popular Articles</h5>
-          </div>
-          <div class="card-body">
-            <div class="d-flex mb-3 pb-3 border-bottom">
-              <img src="https://via.placeholder.com/100" class="rounded me-3" width="80" height="80" alt="Popular Article">
-              <div>
-                <span class="badge mb-1" style="background-color: #9B5DE5;">Entertainment</span>
-                <h6 class="mb-1"><a href="#" class="text-decoration-none text-dark">Music Festival Announces Incredible Lineup for Summer</a></h6>
-                <small class="text-muted"><i class="fas fa-eye me-1"></i> 4.2K views</small>
-              </div>
-            </div>
-
-            <div class="d-flex mb-3 pb-3 border-bottom">
-              <img src="https://via.placeholder.com/100" class="rounded me-3" width="80" height="80" alt="Popular Article">
-              <div>
-                <span class="badge mb-1" style="background-color: #9B5DE5;">Health</span>
-                <h6 class="mb-1"><a href="#" class="text-decoration-none text-dark">Breakthrough in Alzheimer's Research Shows Promise</a></h6>
-                <small class="text-muted"><i class="fas fa-eye me-1"></i> 3.1K views</small>
-              </div>
-            </div>
-
-            <div class="d-flex mb-3 pb-3 border-bottom">
-              <img src="https://via.placeholder.com/100" class="rounded me-3" width="80" height="80" alt="Popular Article">
-              <div>
-                <span class="badge mb-1" style="background-color: #9B5DE5;">Politics</span>
-                <h6 class="mb-1"><a href="#" class="text-decoration-none text-dark">New Policy Reforms Proposed by Government</a></h6>
-                <small class="text-muted"><i class="fas fa-eye me-1"></i> 2.1K views</small>
-              </div>
-            </div>
-
-            <div class="d-flex">
-              <img src="https://via.placeholder.com/100" class="rounded me-3" width="80" height="80" alt="Popular Article">
-              <div>
-                <span class="badge mb-1" style="background-color: #9B5DE5;">Technology</span>
-                <h6 class="mb-1"><a href="#" class="text-decoration-none text-dark">Major Breakthrough in Renewable Energy Research</a></h6>
-                <small class="text-muted"><i class="fas fa-eye me-1"></i> 2.4K views</small>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Newsletter -->
-        <div class="card border-0 shadow-sm" style="background-color: #f8f9fa;">
-          <div class="card-body p-4">
-            <h5 class="mb-3">Subscribe to Newsletter</h5>
-            <p class="text-muted mb-4">Get the latest news and updates delivered directly to your inbox.</p>
-            <form action="subscribe.php" method="post">
-              <div class="mb-3">
-                <input type="email" class="form-control" name="email" placeholder="Your email address" required>
-              </div>
-              <button type="submit" class="btn w-100" style="background-color: #9B5DE5; color: white;">Subscribe</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Scroll to Top Button -->
-  <button id="scrollToTopBtn" class="scroll-to-top-btn" aria-label="Scroll to top">
-    <i class="fas fa-arrow-up"></i>
-  </button>
-
-  <!-- footer -->
-  <?php include 'include/footer.php' ?>
-
-  <?php include 'include/js-links.php' ?>
-
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-
-      // Show/hide the button based on scroll position
-      window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
-          scrollToTopBtn.classList.add('visible');
-        } else {
-          scrollToTopBtn.classList.remove('visible');
-        }
-      });
-
-      // Smooth scroll to top when clicked
-      scrollToTopBtn.addEventListener('click', function() {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      });
-    });
-  </script>
-
   <style>
-    /* Scroll to Top Button */
+    .story-content img {
+      max-width: 100%;
+      height: auto;
+      margin: 20px 0;
+    }
+
+    .story-content figure {
+      margin: 20px 0;
+    }
+
+    .story-content figcaption {
+      font-size: 0.9rem;
+      color: #6c757d;
+      text-align: center;
+      margin-top: 5px;
+    }
+
+    .story-content blockquote {
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 5px solid #9B5DE5;
+      background-color: #f8f9fa;
+      font-style: italic;
+    }
+
+    .author-info {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .share-buttons .btn {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .share-buttons .btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .story-meta {
+      border-bottom: 1px solid #dee2e6;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .related-story-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .related-story-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+
     .scroll-to-top-btn {
       position: fixed;
       bottom: 30px;
@@ -452,54 +276,389 @@ $paged_articles = array_slice($filtered_articles, $offset, $articles_per_page);
       transform: translateY(-3px);
     }
 
-    .scroll-to-top-btn:active {
-      transform: translateY(0);
+    .reply-form {
+      display: none;
+      margin-top: 15px;
     }
 
-    @media (max-width: 576px) {
-      .scroll-to-top-btn {
-        width: 40px;
-        height: 40px;
-        bottom: 20px;
-        right: 20px;
-      }
-    }
-
-    /* Category Filters */
-    .category-filters .btn {
-      border-radius: 30px;
-      transition: all 0.3s ease;
-    }
-
-    .category-filters .btn:hover {
-      background-color: #9B5DE5 !important;
-      color: white !important;
-    }
-
-    /* Card Hover Effect */
-    .card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
-    }
-
-    /* Pagination Styling */
-    .page-link {
-      color: #9B5DE5;
-    }
-
-    .page-link:focus {
-      box-shadow: 0 0 0 0.25rem rgba(155, 93, 229, 0.25);
-    }
-
-    .page-item.active .page-link {
-      background-color: #9B5DE5;
-      border-color: #9B5DE5;
+    .comment-actions {
+      display: flex;
+      gap: 10px;
     }
   </style>
+</head>
+
+<body>
+  <!-- navbar -->
+  <?php include 'include/navbar.php' ?>
+
+  <!-- Story Header -->
+  <header class="py-5 bg-dark text-white">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-8 mx-auto text-center">
+          <span class="badge rounded-pill px-3 py-2 mb-3" style="background-color: #9B5DE5;">
+            <?= htmlspecialchars($story['category'] ?? 'Story') ?>
+          </span>
+          <h1 class="display-4 fw-bold mb-3"><?= htmlspecialchars($story['title']) ?></h1>
+          <div class="d-flex justify-content-center align-items-center">
+            <img src="https://via.placeholder.com/60" class="rounded-circle me-2" alt="Author" width="50" height="50">
+            <div class="text-start">
+              <p class="mb-0 fw-bold"><?= htmlspecialchars($story['author']) ?></p>
+              <small><?= htmlspecialchars($story['author_role']) ?></small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Story Content -->
+  <main class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <!-- Story Meta Information -->
+          <div class="d-flex justify-content-between py-3 story-meta mb-4">
+            <div>
+              <span class="text-muted me-3"><i class="far fa-calendar me-1"></i> <?= htmlspecialchars($story['formatted_date']) ?></span>
+              <span class="text-muted"><i class="far fa-eye me-1"></i> <?= htmlspecialchars($formatted_views) ?> reads</span>
+            </div>
+            <div class="share-buttons">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']) ?>" target="_blank" class="btn btn-outline-primary me-2"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://twitter.com/intent/tweet?url=<?= urlencode('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']) ?>&text=<?= urlencode($story['title']) ?>" target="_blank" class="btn btn-outline-info me-2"><i class="fab fa-twitter"></i></a>
+              <a href="https://api.whatsapp.com/send?text=<?= urlencode($story['title'] . ' - https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']) ?>" target="_blank" class="btn btn-outline-success"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+
+          <!-- Featured Image -->
+          <div class="mb-4">
+            <img src="<?= htmlspecialchars($story['image']) ?>" alt="<?= htmlspecialchars($story['title']) ?>" class="img-fluid rounded shadow">
+          </div>
+
+          <!-- Story Content -->
+          <div class="story-content mb-5">
+            <?= $story['content'] ?>
+          </div>
+
+          <!-- Tags -->
+          <div class="mb-5">
+            <h5>Tags</h5>
+            <div class="d-flex flex-wrap">
+              <a href="stories.php?category=<?= urlencode($story['category'] ?? 'Travel') ?>" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">
+                <?= htmlspecialchars($story['category'] ?? 'Travel') ?>
+              </a>
+              <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Storytelling</a>
+              <a href="#" class="badge text-bg-light text-decoration-none me-2 mb-2 py-2 px-3">Experience</a>
+            </div>
+          </div>
+
+          <!-- Author Box -->
+          <div class="author-info bg-light p-4 mb-5">
+            <div class="row align-items-center">
+              <div class="col-md-3 text-center mb-3 mb-md-0">
+                <img src="https://via.placeholder.com/150" class="rounded-circle mb-2" width="120" height="120" alt="Author">
+              </div>
+              <div class="col-md-9">
+                <h4><?= htmlspecialchars($story['author']) ?></h4>
+                <p class="text-muted mb-2"><?= htmlspecialchars($story['author_role']) ?></p>
+                <p class="mb-3">An experienced writer with a passion for sharing unique perspectives and stories from around the world.</p>
+                <div class="d-flex">
+                  <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle me-2">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle me-2">
+                    <i class="fab fa-instagram"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle me-2">
+                    <i class="fab fa-linkedin-in"></i>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle">
+                    <i class="fas fa-globe"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comments Section -->
+          <div class="mb-5">
+            <h3 class="mb-4" id="comments">Comments (<?= $comment_count ?>)</h3>
+
+            <!-- Comment Form -->
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-body">
+                <h5 class="mb-3">Leave a Comment</h5>
+
+                <?php if (!empty($comment_message)): ?>
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= htmlspecialchars($comment_message) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                <?php endif; ?>
+
+                <?php if (!empty($comment_error)): ?>
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= htmlspecialchars($comment_error) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                <?php endif; ?>
+
+                <form method="post" action="#comments" id="main-comment-form">
+                  <input type="hidden" name="parent_id" id="comment_parent_id" value="">
+                  <div class="mb-3">
+                    <textarea class="form-control" name="comment" rows="4" placeholder="Share your thoughts..." required><?= isset($comment) ? htmlspecialchars($comment) : '' ?></textarea>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                      <input type="text" name="name" class="form-control" placeholder="Your Name" value="<?= isset($name) ? htmlspecialchars($name) : '' ?>" required>
+                    </div>
+                    <div class="col-md-6">
+                      <input type="email" name="email" class="form-control" placeholder="Your Email" value="<?= isset($email) ? htmlspecialchars($email) : '' ?>" required>
+                    </div>
+                  </div>
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="saveInfo">
+                    <label class="form-check-label" for="saveInfo">
+                      Save my name and email for the next time I comment
+                    </label>
+                  </div>
+                  <button type="submit" name="submit_comment" class="btn" style="background-color: #9B5DE5; color: white;">Post Comment</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Comment List -->
+            <div class="comment-list">
+              <?php if (empty($comments)): ?>
+                <div class="alert alert-info">
+                  No comments yet. Be the first to comment!
+                </div>
+              <?php else: ?>
+                <?php foreach ($comments as $comment): ?>
+                  <div class="card border-0 shadow-sm mb-3" id="comment-<?= $comment['id'] ?>">
+                    <div class="card-body">
+                      <div class="d-flex mb-3">
+                        <img src="https://www.gravatar.com/avatar/<?= md5(strtolower(trim($comment['email']))) ?>?s=50&d=mp" class="rounded-circle me-3" width="50" height="50" alt="<?= htmlspecialchars($comment['name']) ?>">
+                        <div>
+                          <h6 class="mb-1"><?= htmlspecialchars($comment['name']) ?></h6>
+                          <small class="text-muted"><?= htmlspecialchars($comment['formatted_date']) ?></small>
+                        </div>
+                      </div>
+                      <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                      <div class="comment-actions">
+                        <button class="btn btn-sm btn-outline-secondary reply-button" data-comment-id="<?= $comment['id'] ?>">Reply</button>
+                      </div>
+
+                      <!-- Reply Form -->
+                      <div class="reply-form" id="reply-form-<?= $comment['id'] ?>">
+                        <form method="post" action="#comment-<?= $comment['id'] ?>" class="reply-comment-form">
+                          <input type="hidden" name="parent_id" value="<?= $comment['id'] ?>">
+                          <div class="mb-3">
+                            <textarea class="form-control" name="comment" rows="3" placeholder="Write your reply..." required></textarea>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                              <input type="text" name="name" class="form-control reply-name" placeholder="Your Name" required>
+                            </div>
+                            <div class="col-md-6">
+                              <input type="email" name="email" class="form-control reply-email" placeholder="Your Email" required>
+                            </div>
+                          </div>
+                          <div class="d-flex gap-2">
+                            <button type="submit" name="submit_comment" class="btn btn-sm" style="background-color: #9B5DE5; color: white;">Post Reply</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary cancel-reply" data-comment-id="<?= $comment['id'] ?>">Cancel</button>
+                          </div>
+                        </form>
+                      </div>
+
+                      <!-- Replies -->
+                      <?php if (!empty($comment['replies'])): ?>
+                        <?php foreach ($comment['replies'] as $reply): ?>
+                          <div class="ms-5 p-3 bg-light rounded mt-3" id="comment-<?= $reply['id'] ?>">
+                            <div class="d-flex mb-3">
+                              <img src="https://www.gravatar.com/avatar/<?= md5(strtolower(trim($reply['email']))) ?>?s=40&d=mp" class="rounded-circle me-3" width="40" height="40" alt="<?= htmlspecialchars($reply['name']) ?>">
+                              <div>
+                                <h6 class="mb-1">
+                                  <?= htmlspecialchars($reply['name']) ?>
+                                  <?php if ($reply['name'] === $story['author']): ?>
+                                    <span class="badge bg-secondary">Author</span>
+                                  <?php endif; ?>
+                                </h6>
+                                <small class="text-muted"><?= htmlspecialchars($reply['formatted_date']) ?></small>
+                              </div>
+                            </div>
+                            <p class="mb-0"><?= nl2br(htmlspecialchars($reply['comment'])) ?></p>
+                          </div>
+                        <?php endforeach; ?>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                <?php endforeach; ?>
+              <?php endif; ?>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Related Stories -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-5">You May Also Like</h2>
+      <div class="row">
+        <?php foreach ($related_stories as $related): ?>
+          <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100 related-story-card">
+              <img src="<?= htmlspecialchars($related['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($related['title']) ?>" style="height: 200px; object-fit: cover;">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <a href="story-detail.php?id=<?= $related['id'] ?>" class="text-decoration-none text-dark">
+                    <?= htmlspecialchars($related['title']) ?>
+                  </a>
+                </h5>
+                <div class="mt-3 d-flex justify-content-between align-items-center">
+                  <small class="text-muted"><?= htmlspecialchars($related['author']) ?></small>
+                  <small class="text-muted"><i class="far fa-eye me-1"></i> <?= htmlspecialchars($related['views']) ?> reads</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+          <h2 class="mb-3">Have Your Own Story to Share?</h2>
+          <p class="lead mb-4">We welcome submissions from writers of all backgrounds. Share your unique perspective with our community.</p>
+          <a href="submit-story.php" class="btn btn-lg px-4" style="background-color: #9B5DE5; color: white;">Submit Your Story</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTopBtn" class="scroll-to-top-btn" aria-label="Scroll to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- footer -->
+  <?php include 'include/footer.php' ?>
+
+  <?php include 'include/js-links.php' ?>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+      // Show/hide the button based on scroll position
+      window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+          scrollToTopBtn.classList.add('visible');
+        } else {
+          scrollToTopBtn.classList.remove('visible');
+        }
+      });
+
+      // Smooth scroll to top when clicked
+      scrollToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+
+      // Comment reply functionality
+      const replyButtons = document.querySelectorAll('.reply-button');
+      const cancelButtons = document.querySelectorAll('.cancel-reply');
+
+      replyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const commentId = this.getAttribute('data-comment-id');
+          document.getElementById(`reply-form-${commentId}`).style.display = 'block';
+
+          // Populate reply form with saved info
+          const replyForm = document.getElementById(`reply-form-${commentId}`);
+          if (localStorage.getItem('comment_name')) {
+            replyForm.querySelector('.reply-name').value = localStorage.getItem('comment_name');
+          }
+
+          if (localStorage.getItem('comment_email')) {
+            replyForm.querySelector('.reply-email').value = localStorage.getItem('comment_email');
+          }
+        });
+      });
+
+      cancelButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const commentId = this.getAttribute('data-comment-id');
+          document.getElementById(`reply-form-${commentId}`).style.display = 'none';
+        });
+      });
+
+      // Save comment info in localStorage if checkbox is checked
+      const saveInfoCheckbox = document.getElementById('saveInfo');
+      const nameInput = document.querySelector('input[name="name"]');
+      const emailInput = document.querySelector('input[name="email"]');
+
+      // Load saved data if available
+      if (localStorage.getItem('comment_name')) {
+        nameInput.value = localStorage.getItem('comment_name');
+      }
+
+      if (localStorage.getItem('comment_email')) {
+        emailInput.value = localStorage.getItem('comment_email');
+        saveInfoCheckbox.checked = true;
+      }
+
+      // Save data when form is submitted
+      document.getElementById('main-comment-form').addEventListener('submit', function() {
+        if (saveInfoCheckbox.checked) {
+          localStorage.setItem('comment_name', nameInput.value);
+          localStorage.setItem('comment_email', emailInput.value);
+        } else {
+          localStorage.removeItem('comment_name');
+          localStorage.removeItem('comment_email');
+        }
+      });
+
+      // Also save from reply forms
+      document.querySelectorAll('.reply-comment-form').forEach(form => {
+        form.addEventListener('submit', function() {
+          if (saveInfoCheckbox.checked) {
+            const name = this.querySelector('input[name="name"]').value;
+            const email = this.querySelector('input[name="email"]').value;
+            localStorage.setItem('comment_name', name);
+            localStorage.setItem('comment_email', email);
+          }
+        });
+      });
+
+      // Scroll to comment section if there's a comment hash in URL
+      if (window.location.hash && window.location.hash.includes('comment-')) {
+        const commentElement = document.querySelector(window.location.hash);
+        if (commentElement) {
+          commentElement.scrollIntoView({
+            behavior: 'smooth'
+          });
+
+          // Highlight the comment temporarily
+          commentElement.style.transition = 'background-color 0.5s ease';
+          commentElement.style.backgroundColor = 'rgba(155, 93, 229, 0.1)';
+
+          setTimeout(() => {
+            commentElement.style.backgroundColor = '';
+          }, 2000);
+        }
+      }
+    });
+  </script>
 </body>
 
 </html>

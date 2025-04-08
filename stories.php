@@ -1,141 +1,52 @@
 <?php
-// Story categories
+session_start();
+include 'config/db.php';
+
+// Story categories - these would ideally come from your categories table
 $story_categories = ['All Stories', 'Travel', 'Culture', 'Adventure', 'Science', 'Personal', 'Historical', 'Nature'];
 
 // Get the current category from URL parameter, default to 'All Stories'
 $current_category = isset($_GET['category']) ? $_GET['category'] : 'All Stories';
 
-// In a real implementation, you would fetch stories from a database
-// For now, we'll use dummy data for demonstration
-$stories = [
-  // Travel Stories
-  [
-    'id' => 1,
-    'title' => 'A Journey Through Ancient Ruins',
-    'category' => 'Travel',
-    'author' => 'Sarah Johnson',
-    'author_role' => 'Travel Writer',
-    'date' => 'April 8, 2025',
-    'reads' => '3.2K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'Exploring the forgotten temples of Southeast Asia revealed a world frozen in time, where ancient civilizations once thrived...'
-  ],
-  [
-    'id' => 2,
-    'title' => 'Lost in the Streets of Marrakech',
-    'category' => 'Travel',
-    'author' => 'James Wilson',
-    'author_role' => 'Photojournalist',
-    'date' => 'April 6, 2025',
-    'reads' => '2.8K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'The labyrinthine streets of Marrakech\'s medina offer an intoxicating blend of colors, scents and sounds that transport you to another era...'
-  ],
+// Fetch stories from database
+// Note: Since there's no category column in the stories table based on your SQL dump,
+// we'll fetch all stories and filter them on the PHP side for now
+$sql = "SELECT id, title, author, author_role, DATE_FORMAT(created_at, '%M %d, %Y') as date, 
+        view_count, image, excerpt, featured
+        FROM stories 
+        ORDER BY created_at DESC";
+$result = $conn->query($sql);
+$all_stories = [];
 
-  // Culture Stories
-  [
-    'id' => 3,
-    'title' => 'The Hidden Life of Mountain Communities',
-    'category' => 'Culture',
-    'author' => 'Michael Chen',
-    'author_role' => 'Cultural Reporter',
-    'date' => 'April 7, 2025',
-    'reads' => '2.5K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'High in the Himalayas, isolated communities maintain traditions and ways of life that have remained unchanged for centuries...'
-  ],
-  [
-    'id' => 4,
-    'title' => 'Festivals of Light Around the World',
-    'category' => 'Culture',
-    'author' => 'Priya Sharma',
-    'author_role' => 'Cultural Anthropologist',
-    'date' => 'April 5, 2025',
-    'reads' => '3.1K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'From Diwali to Hanukkah to Loy Krathong, cultures around the world celebrate light as a symbol of hope, knowledge, and new beginnings...'
-  ],
+while ($row = $result->fetch_assoc()) {
+  // Format view count for display
+  $row['reads'] = $row['view_count'];
+  if ($row['reads'] >= 1000) {
+    $row['reads'] = number_format($row['reads'] / 1000, 1) . 'K';
+  }
 
-  // Adventure Stories
-  [
-    'id' => 5,
-    'title' => 'Surviving the Arctic Wilderness',
-    'category' => 'Adventure',
-    'author' => 'Alex Morgan',
-    'author_role' => 'Expedition Leader',
-    'date' => 'April 8, 2025',
-    'reads' => '4.7K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'When our equipment failed 200 miles from the nearest settlement, we faced the ultimate test of survival in sub-zero temperatures...'
-  ],
-  [
-    'id' => 6,
-    'title' => 'Solo Sailing Across the Pacific',
-    'category' => 'Adventure',
-    'author' => 'Emma Rodriguez',
-    'author_role' => 'Marine Explorer',
-    'date' => 'April 4, 2025',
-    'reads' => '3.9K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'Forty-seven days alone on the world\'s largest ocean taught me more about myself than I had learned in a lifetime on land...'
-  ],
+  // Set default image if none exists
+  if (empty($row['image'])) {
+    $row['image'] = 'https://via.placeholder.com/800x500';
+  }
 
-  // Science Stories
-  [
-    'id' => 7,
-    'title' => 'Underwater Exploration: New Species Discovered',
-    'category' => 'Science',
-    'author' => 'Emily Santos',
-    'author_role' => 'Marine Biologist',
-    'date' => 'April 7, 2025',
-    'reads' => '3.5K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'Deep in the Mariana Trench, our research expedition encountered life forms that challenge our understanding of adaptation and survival...'
-  ],
-  [
-    'id' => 8,
-    'title' => 'Living Among the Stars: Astronaut Diaries',
-    'category' => 'Science',
-    'author' => 'Robert Anderson',
-    'author_role' => 'Space Correspondent',
-    'date' => 'April 3, 2025',
-    'reads' => '5.2K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'The personal journal entries of astronauts reveal the profound psychological impact of viewing Earth from orbit...'
-  ],
+  // For demo purposes, assign a random category if not filtering
+  // In production, you would have a proper category column or a relationship table
+  if (!isset($row['category'])) {
+    $category_index = array_rand(array_slice($story_categories, 1)); // Skip 'All Stories'
+    $row['category'] = $story_categories[$category_index + 1];
+  }
 
-  // Personal Stories
-  [
-    'id' => 9,
-    'title' => 'Finding My Voice After Trauma',
-    'category' => 'Personal',
-    'author' => 'Jennifer Lee',
-    'author_role' => 'Author & Advocate',
-    'date' => 'April 5, 2025',
-    'reads' => '6.1K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'My journey of recovery became an unexpected path to helping others find strength in their most vulnerable moments...'
-  ],
-  [
-    'id' => 10,
-    'title' => 'The Year I Lived Without Technology',
-    'category' => 'Personal',
-    'author' => 'David Thompson',
-    'author_role' => 'Digital Minimalist',
-    'date' => 'April 2, 2025',
-    'reads' => '4.8K',
-    'image' => 'https://via.placeholder.com/800x500',
-    'excerpt' => 'Disconnecting from screens and reconnecting with reality transformed my relationships, productivity and mental health...'
-  ]
-];
+  $all_stories[] = $row;
+}
 
 // Filter stories by category if not 'All Stories'
 if ($current_category !== 'All Stories') {
-  $filtered_stories = array_filter($stories, function ($story) use ($current_category) {
+  $filtered_stories = array_filter($all_stories, function ($story) use ($current_category) {
     return $story['category'] === $current_category;
   });
 } else {
-  $filtered_stories = $stories;
+  $filtered_stories = $all_stories;
 }
 
 // Pagination settings
@@ -148,8 +59,56 @@ $offset = ($current_page - 1) * $stories_per_page;
 // Get stories for current page
 $paged_stories = array_slice($filtered_stories, $offset, $stories_per_page);
 
-// Featured stories (first 3 from all stories)
-$featured_stories = array_slice($stories, 0, 3);
+// Featured stories (get stories marked as featured)
+$featured_stories = array_filter($all_stories, function ($story) {
+  return $story['featured'] == 1;
+});
+$featured_stories = array_slice($featured_stories, 0, 3);
+
+// If we don't have enough featured stories, get the most recent ones
+if (count($featured_stories) < 3) {
+  $needed = 3 - count($featured_stories);
+  $non_featured = array_filter($all_stories, function ($story) use ($featured_stories) {
+    foreach ($featured_stories as $featured) {
+      if ($featured['id'] == $story['id']) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  usort($non_featured, function ($a, $b) {
+    return strtotime($b['date']) - strtotime($a['date']);
+  });
+
+  $featured_stories = array_merge($featured_stories, array_slice($non_featured, 0, $needed));
+}
+
+// Stories of the Month (most viewed stories)
+$popular_stories = $all_stories;
+usort($popular_stories, function ($a, $b) {
+  return $b['view_count'] - $a['view_count'];
+});
+$popular_stories = array_slice($popular_stories, 0, 4);
+
+// Featured Author (get the author with the most stories)
+$authors = [];
+foreach ($all_stories as $story) {
+  if (!isset($authors[$story['author']])) {
+    $authors[$story['author']] = [
+      'name' => $story['author'],
+      'role' => $story['author_role'],
+      'count' => 0
+    ];
+  }
+  $authors[$story['author']]['count']++;
+}
+
+usort($authors, function ($a, $b) {
+  return $b['count'] - $a['count'];
+});
+
+$featured_author = !empty($authors) ? reset($authors) : null;
 ?>
 
 <!DOCTYPE html>
@@ -241,35 +200,37 @@ $featured_stories = array_slice($stories, 0, 3);
             <?php foreach ($paged_stories as $story): ?>
               <div class="col-md-6 mb-4">
                 <div class="card h-100 border-0 shadow-sm">
-                  <div class="position-relative">
-                    <img src="<?= htmlspecialchars($story['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($story['title']) ?>" style="height: 200px; object-fit: cover;">
-                    <div class="position-absolute top-0 end-0 m-2">
-                      <span class="badge rounded-pill px-3 py-2" style="background-color: #9B5DE5;">
-                        <i class="fas fa-book-open me-1"></i> <?= htmlspecialchars($story['category']) ?>
-                      </span>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <h5 class="card-title">
-                      <a href="story-detail.php?id=<?= $story['id'] ?>" class="text-decoration-none text-dark">
-                        <?= htmlspecialchars($story['title']) ?>
-                      </a>
-                    </h5>
-                    <p class="card-text"><?= htmlspecialchars($story['excerpt']) ?></p>
-                  </div>
-                  <div class="card-footer bg-white border-0">
-                    <div class="d-flex align-items-center">
-                      <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="Author" width="40" height="40">
-                      <div>
-                        <p class="mb-0 fw-bold"><?= htmlspecialchars($story['author']) ?></p>
-                        <small class="text-muted"><?= htmlspecialchars($story['author_role']) ?></small>
-                      </div>
-                      <div class="ms-auto">
-                        <small class="text-muted me-2"><i class="far fa-clock me-1"></i> <?= htmlspecialchars($story['date']) ?></small>
-                        <small class="text-muted"><i class="far fa-eye me-1"></i> <?= htmlspecialchars($story['reads']) ?></small>
+                  <a href="story-detail.php?id=<?= $story['id'] ?>" class="stretched-link">
+                    <div class="position-relative">
+                      <img src="<?= htmlspecialchars($story['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($story['title']) ?>" style="height: 200px; object-fit: cover;">
+                      <div class="position-absolute top-0 end-0 m-2">
+                        <span class="badge rounded-pill px-3 py-2" style="background-color: #9B5DE5;">
+                          <i class="fas fa-book-open me-1"></i> <?= htmlspecialchars($story['category']) ?>
+                        </span>
                       </div>
                     </div>
-                  </div>
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        <a href="story-detail.php?id=<?= $story['id'] ?>" class="text-decoration-none text-dark">
+                          <?= htmlspecialchars($story['title']) ?>
+                        </a>
+                      </h5>
+                      <p class="card-text"><?= htmlspecialchars($story['excerpt']) ?></p>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                      <div class="d-flex align-items-center">
+                        <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="Author" width="40" height="40">
+                        <div>
+                          <p class="mb-0 fw-bold"><?= htmlspecialchars($story['author']) ?></p>
+                          <small class="text-muted"><?= htmlspecialchars($story['author_role']) ?></small>
+                        </div>
+                        <div class="ms-auto">
+                          <small class="text-muted me-2"><i class="far fa-clock me-1"></i> <?= htmlspecialchars($story['date']) ?></small>
+                          <small class="text-muted"><i class="far fa-eye me-1"></i> <?= htmlspecialchars($story['reads']) ?></small>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
                 </div>
               </div>
             <?php endforeach; ?>
@@ -313,78 +274,55 @@ $featured_stories = array_slice($stories, 0, 3);
             <h5 class="mb-0">Stories of the Month</h5>
           </div>
           <div class="card-body">
-            <div class="d-flex mb-3 pb-3 border-bottom">
-              <img src="https://via.placeholder.com/100" class="rounded me-3" width="80" height="80" alt="Story">
-              <div>
-                <span class="badge mb-1" style="background-color: #9B5DE5;">Personal</span>
-                <h6 class="mb-1"><a href="#" class="text-decoration-none text-dark">Finding My Voice After Trauma</a></h6>
-                <small class="text-muted"><i class="far fa-eye me-1"></i> 6.1K reads</small>
+            <?php foreach ($popular_stories as $index => $story): ?>
+              <div class="d-flex <?= $index < count($popular_stories) - 1 ? 'mb-3 pb-3 border-bottom' : '' ?>">
+                <img src="<?= htmlspecialchars($story['image']) ?>" class="rounded me-3" width="80" height="80" alt="Story" style="object-fit: cover;">
+                <div>
+                  <span class="badge mb-1" style="background-color: #9B5DE5;"><?= htmlspecialchars($story['category']) ?></span>
+                  <h6 class="mb-1"><a href="story-detail.php?id=<?= $story['id'] ?>" class="text-decoration-none text-dark"><?= htmlspecialchars($story['title']) ?></a></h6>
+                  <small class="text-muted"><i class="far fa-eye me-1"></i> <?= htmlspecialchars($story['reads']) ?> reads</small>
+                </div>
               </div>
-            </div>
-
-            <div class="d-flex mb-3 pb-3 border-bottom">
-              <img src="https://via.placeholder.com/100" class="rounded me-3" width="80" height="80" alt="Story">
-              <div>
-                <span class="badge mb-1" style="background-color: #9B5DE5;">Science</span>
-                <h6 class="mb-1"><a href="#" class="text-decoration-none text-dark">Living Among the Stars: Astronaut Diaries</a></h6>
-                <small class="text-muted"><i class="far fa-eye me-1"></i> 5.2K reads</small>
-              </div>
-            </div>
-
-            <div class="d-flex mb-3 pb-3 border-bottom">
-              <img src="https://via.placeholder.com/100" class="rounded me-3" width="80" height="80" alt="Story">
-              <div>
-                <span class="badge mb-1" style="background-color: #9B5DE5;">Adventure</span>
-                <h6 class="mb-1"><a href="#" class="text-decoration-none text-dark">Surviving the Arctic Wilderness</a></h6>
-                <small class="text-muted"><i class="far fa-eye me-1"></i> 4.7K reads</small>
-              </div>
-            </div>
-
-            <div class="d-flex">
-              <img src="https://via.placeholder.com/100" class="rounded me-3" width="80" height="80" alt="Story">
-              <div>
-                <span class="badge mb-1" style="background-color: #9B5DE5;">Culture</span>
-                <h6 class="mb-1"><a href="#" class="text-decoration-none text-dark">Festivals of Light Around the World</a></h6>
-                <small class="text-muted"><i class="far fa-eye me-1"></i> 3.1K reads</small>
-              </div>
-            </div>
+            <?php endforeach; ?>
           </div>
         </div>
 
         <!-- Featured Author -->
-        <div class="card border-0 shadow-sm mb-4">
-          <div class="card-header bg-white border-0">
-            <h5 class="mb-0">Featured Author</h5>
-          </div>
-          <div class="card-body text-center">
-            <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" width="120" height="120" alt="Featured Author">
-            <h5 class="card-title">Sarah Johnson</h5>
-            <p class="text-muted">Travel Writer & Photographer</p>
-            <p class="card-text">Sarah has documented her travels across 47 countries, specializing in remote locations and cultural immersion experiences.</p>
-            <div class="d-flex justify-content-center">
-              <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle mx-1">
-                <i class="fab fa-twitter"></i>
-              </a>
-              <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle mx-1">
-                <i class="fab fa-instagram"></i>
-              </a>
-              <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle mx-1">
-                <i class="fab fa-linkedin-in"></i>
-              </a>
-              <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle mx-1">
-                <i class="fas fa-globe"></i>
-              </a>
+        <?php if ($featured_author): ?>
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0">
+              <h5 class="mb-0">Featured Author</h5>
             </div>
-            <a href="#" class="btn mt-3" style="background-color: #9B5DE5; color: white;">View All Stories</a>
+            <div class="card-body text-center">
+              <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" width="120" height="120" alt="Featured Author">
+              <h5 class="card-title"><?= htmlspecialchars($featured_author['name']) ?></h5>
+              <p class="text-muted"><?= htmlspecialchars($featured_author['role']) ?></p>
+              <p class="card-text">Published <?= $featured_author['count'] ?> <?= $featured_author['count'] == 1 ? 'story' : 'stories' ?> on our platform.</p>
+              <div class="d-flex justify-content-center">
+                <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle mx-1">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle mx-1">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle mx-1">
+                  <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle mx-1">
+                  <i class="fas fa-globe"></i>
+                </a>
+              </div>
+              <a href="stories.php?author=<?= urlencode($featured_author['name']) ?>" class="btn mt-3" style="background-color: #9B5DE5; color: white;">View All Stories</a>
+            </div>
           </div>
-        </div>
+        <?php endif; ?>
 
         <!-- Submit Your Story -->
         <div class="card border-0 shadow-sm" style="background-color: #f8f9fa;">
           <div class="card-body p-4">
             <h5 class="mb-3">Share Your Story</h5>
             <p class="text-muted mb-4">Have an extraordinary experience to share? We welcome submissions from writers of all backgrounds.</p>
-            <a href="#" class="btn w-100" style="background-color: #9B5DE5; color: white;">Submit Your Story</a>
+            <a href="submit-story.php" class="btn w-100" style="background-color: #9B5DE5; color: white;">Submit Your Story</a>
           </div>
         </div>
       </div>
