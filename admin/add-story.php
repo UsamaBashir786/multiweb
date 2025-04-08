@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "config/db.php";
+include "../config/db.php";
 
 // Handle form data only if it's POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
