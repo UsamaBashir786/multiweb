@@ -294,6 +294,16 @@
         Users
       </a>
     </li>
+    <li class="dropdown">
+      <div class="dropdown-toggle">
+        <div>
+          Breaking News
+        </div>
+      </div>
+      <div class="custom-dropdown-menu">
+        <a href="breaking-news.php" class="dropdown-item">Manage Breaking News</a>
+      </div>
+    </li>
     <li>
       <a href="#settings">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
