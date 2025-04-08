@@ -13,8 +13,8 @@
 
   <div class="mt-5 container d-sm-flex align-items-center justify-content-between w-100" style="height: 100vh;">
     <div class="col-md-4 mx-auto mb-4 mb-sm-0 headline">
-      <span class="text-secondary text-uppercase">Subheadline</span>
-      <h1 class="display-4 my-4 font-weight-bold">Enter Your <span style="color: #9B5DE5;">Headline Here</span></h1>
+      <span class="text-secondary text-uppercase">Lion Of Web</span>
+      <h1 class="display-4 my-4 font-weight-bold">The Rising <span style="color: #9B5DE5;">Web Here</span></h1>
       <a href="#" class="btn px-5 py-3 text-white mt-3 mt-sm-0" style="border-radius: 30px; background-color: #9B5DE5;">Get Started</a>
     </div>
     <!-- in mobile remove the clippath -->
