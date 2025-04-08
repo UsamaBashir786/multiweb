@@ -228,7 +228,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
     <ul class="sidebar-nav">
       <li class="nav-item">
-        <a href="dashboard.php" class="nav-link active">
+        <a href="index.php" class="nav-link active">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>

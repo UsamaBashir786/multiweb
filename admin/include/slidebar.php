@@ -222,7 +222,7 @@
 
   <ul class="sidebar-menu">
     <li>
-      <a href="#dashboard" class="active">
+      <a href="index.php" class="active">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
           <rect x="3" y="3" width="7" height="7"></rect>
           <rect x="14" y="3" width="7" height="7"></rect>
@@ -246,8 +246,7 @@
         </svg> -->
       </div>
       <div class="custom-dropdown-menu">
-        <a href="#addStoryCategory" class="dropdown-item">Add Story Category</a>
-        <a href="#addArticleCategory" class="dropdown-item">Add Article Category</a>
+        <a href="add-category.php" class="dropdown-item">Add Category</a>
       </div>
     </li>
     <li class="dropdown">
@@ -267,7 +266,8 @@
         </svg> -->
       </div>
       <div class="custom-dropdown-menu">
-        <a href="#addStoryCategory" class="dropdown-item">Add Story</a>
+        <a href="add_story.php" class="dropdown-item">Add Story</a>
+        <a href="manage-stories.php" class="dropdown-item">Manage Story</a>
         <!-- <a href="#addArticleCategory" class="dropdown-item">Add Article Category</a> -->
       </div>
     </li>
