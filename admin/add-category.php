@@ -129,11 +129,42 @@ if ($result && $result->num_rows > 0) {
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f9;
+      overflow-x: hidden;
+    }
+
+    /* Table Styles */
+    .category-table {
+      margin-bottom: 0;
+    }
+
+    .category-table th {
+      font-weight: 600;
+      background-color: #f8f9fa;
+    }
+
+    /* Edit form (initially hidden) */
+    .edit-form {
+      display: none;
+      width: 100%;
+    }
+
+    /* Show edit form when in editing mode */
+    .category-row.editing .category-display {
+      display: none;
+    }
+
+    .category-row.editing .edit-form {
+      display: flex;
+    }
+  </style>
 </head>
 
 <body>
-<?php include 'include/slidebar.php' ?>
+  <?php include 'include/slidebar.php' ?>
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
@@ -169,7 +200,7 @@ if ($result && $result->num_rows > 0) {
             <form method="post" action="">
               <div class="mb-3">
                 <label for="category_name" class="form-label">Category Name</label>
-                <input type="text" class="form-control" id="category_name" name="category_name" required>
+                <input type="text" class="form-control" id="category_name" name="category_name" value="<?php echo htmlspecialchars($categoryName); ?>" required>
               </div>
 
               <div class="d-grid">
@@ -269,33 +300,6 @@ if ($result && $result->num_rows > 0) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // Sidebar Toggle for Mobile
-    document.getElementById('sidebarToggle').addEventListener('click', function() {
-      document.getElementById('sidebar').classList.toggle('show');
-      document.getElementById('sidebarOverlay').classList.toggle('show');
-    });
-
-    // Close sidebar when clicking on overlay
-    document.getElementById('sidebarOverlay').addEventListener('click', function() {
-      document.getElementById('sidebar').classList.remove('show');
-      this.classList.remove('show');
-    });
-
-    // Handle mobile responsiveness
-    function checkWidth() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-
-      if (window.innerWidth <= 992) {
-        sidebar.classList.remove('show');
-        overlay.classList.remove('show');
-      }
-    }
-
-    // Check width on load and resize
-    window.addEventListener('resize', checkWidth);
-    window.addEventListener('load', checkWidth);
-
     // Auto dismiss alerts after 5 seconds
     window.addEventListener('load', function() {
       setTimeout(function() {
