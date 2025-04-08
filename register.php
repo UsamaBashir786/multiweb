@@ -143,10 +143,187 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     .text-success {
       color: #1cc88a !important;
     }
+
+    .register-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+
+    .card {
+      max-width: 800px;
+      width: 100%;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin: 0;
+    }
+
+    .card-header {
+      background: #9B5DE5;
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-bottom: none;
+    }
+
+    .card-header h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .card-header p {
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 0;
+    }
+
+    .card-body {
+      padding: 40px;
+    }
+
+    .form-floating>.form-control {
+      padding: 1rem 0.75rem;
+    }
+
+    .btn-register {
+      background-color: #9B5DE5;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      margin-top: 25px;
+    }
+
+    .btn-register:hover {
+      background-color: #8348c6;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .input-group-text {
+      border-right: none;
+      background-color: transparent;
+    }
+
+    .form-control {
+      border-left: none;
+    }
+
+    .form-control:focus {
+      border-color: #ced4da;
+      box-shadow: none;
+    }
+
+    .input-group:focus-within .input-group-text,
+    .input-group:focus-within .form-control {
+      border-color: #9B5DE5;
+    }
+
+    .password-strength {
+      height: 5px;
+      background-color: #e9ecef;
+      margin: 10px 0;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .password-requirements {
+      font-size: 0.9rem;
+      color: #6c757d;
+      margin: 15px 0;
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .password-requirements p {
+      margin-bottom: 10px;
+      color: #6c757d;
+      font-weight: 500;
+    }
+
+    .password-requirements ul {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 0;
+    }
+
+    .password-requirements li {
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .password-requirements i {
+      width: 20px;
+      text-align: center;
+    }
+
+    .form-check {
+      margin-top: 20px;
+    }
+
+    .form-check-input:checked {
+      background-color: #9B5DE5;
+      border-color: #9B5DE5;
+    }
+
+    .form-check-input:focus {
+      border-color: #9B5DE5;
+      box-shadow: 0 0 0 0.25rem rgba(155, 93, 229, 0.25);
+    }
+
+    .form-check a {
+      color: #9B5DE5;
+    }
+
+    .form-check a:hover {
+      color: #8348c6;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 25px;
+      color: #6c757d;
+    }
+
+    .login-link a {
+      color: #9B5DE5;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .login-link a:hover {
+      color: #8348c6;
+      text-decoration: underline;
+    }
+
+    .text-success {
+      color: #1cc88a !important;
+    }
+
+    .alert {
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    @media (max-width: 768px) {
+      .card-body {
+        padding: 25px;
+      }
+    }
   </style>
 </head>
 
 <body class="bg-light">
+  <?php include 'include/navbar.php'; ?>
+
   <div class="register-container">
     <div class="card">
       <div class="card-header">
