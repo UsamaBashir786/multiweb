@@ -156,15 +156,8 @@ $featured_stories = array_slice($stories, 0, 3);
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stories - <?= htmlspecialchars($current_category) ?></title>
-  <!-- css -->
-  <link rel="stylesheet" href="assets/css/style.css">
-  <!-- bootstrap css -->
-  <link rel="stylesheet" href="assets/bootstrap-5.3.5-dist/css/bootstrap.min.css">
-  <!-- font awesome icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <?php include 'include/css-links.php' ?>
+
 </head>
 
 <body>
@@ -406,11 +399,8 @@ $featured_stories = array_slice($stories, 0, 3);
   <!-- footer -->
   <?php include 'include/footer.php' ?>
 
-  <!-- bootstrap js -->
-  <script src="assets/bootstrap-5.3.5-dist/js/bootstrap.bundle.js"></script>
-  <script src="assets/bootstrap-5.3.5-dist/js/bootstrap.min.js"></script>
-  <!-- js -->
-  <script src="assets/js/script.js"></script>
+  <?php include 'include/js-links.php' ?>
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -2,15 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Under Development - Lion Of Web</title>
-  <!-- bootstrap css -->
-  <link rel="stylesheet" href="assets/bootstrap-5.3.5-dist/css/bootstrap.min.css">
-  <!-- font awesome icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <!-- css -->
-  <link rel="stylesheet" href="assets/css/style.css">
+  <?php include 'include/css-links.php' ?>
+
 </head>
 
 <body>
@@ -118,11 +111,8 @@
     <i class="fas fa-arrow-up"></i>
   </button>
 
-  <!-- bootstrap js -->
-  <script src="assets/bootstrap-5.3.5-dist/js/bootstrap.bundle.js"></script>
-  <script src="assets/bootstrap-5.3.5-dist/js/bootstrap.min.js"></script>
-  <!-- js -->
-  <script src="assets/js/script.js"></script>
+  <?php include 'include/js-links.php' ?>
+
 
   <style>
     .under-development-section {

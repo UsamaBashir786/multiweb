@@ -2,15 +2,7 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us - Lion Of Web</title>
-  <!-- bootstrap css -->
-  <link rel="stylesheet" href="assets/bootstrap-5.3.5-dist/css/bootstrap.min.css">
-  <!-- font awesome icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <!-- css -->
-  <link rel="stylesheet" href="assets/css/style.css">
+  <?php include 'include/css-links.php' ?>
 </head>
 
 <body>
@@ -115,7 +107,7 @@
               <p class="mb-0">liaqat.ali011@gmail.com</p>
             </div>
           </div>
-<!-- 
+          <!-- 
           <div class="d-flex align-items-center mb-4">
             <div class="contact-icon me-3">
               <i class="fas fa-clock"></i>
@@ -253,11 +245,8 @@
     <i class="fas fa-arrow-up"></i>
   </button>
 
-  <!-- bootstrap js -->
-  <script src="assets/bootstrap-5.3.5-dist/js/bootstrap.bundle.js"></script>
-  <script src="assets/bootstrap-5.3.5-dist/js/bootstrap.min.js"></script>
-  <!-- js -->
-  <script src="assets/js/script.js"></script>
+  <?php include 'include/js-links.php' ?>
+
 
   <style>
     /* Page Header Styling */

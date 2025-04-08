@@ -1,3 +1,9 @@
+<?php
+// Ensure session is started if not already
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+?>
 <div class="container-fluid bg-light p-0">
   <div class="row gx-0 d-none d-lg-flex">
     <div class="col-lg-7 px-5 text-start">
@@ -6,7 +12,6 @@
         <small>Noor Shah, District Sahiwal. </small>
       </div>
       <div class="h-100 d-inline-flex align-items-center py-3">
-        <!-- <i class="far fa-clock text-primary me-2"></i> -->
         <small></small>
       </div>
     </div>
@@ -15,9 +20,26 @@
         <i class="fas fa-phone-alt text-primary me-2"></i>
         <small>03003752466</small>
       </div>
-      <div class="h-100 d-inline-flex align-items-center">
-        <a href="login.php" class="btn btn-sm btn-outline-primary me-2"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
-        <a href="register.php" class="btn btn-sm btn-primary"><i class="fas fa-user-plus me-1"></i> Register</a>
+      <div class="h-100 d-inline-flex align-items-center" style="z-index: 99999;">
+        <?php if (isset($_SESSION['user_id'])): ?>
+          <div class="dropdown" style="z-index: 99999;">
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user me-1"></i>
+              <?php echo htmlspecialchars($_SESSION['first_name']); ?>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
+              <li><a class="dropdown-item" href="settings.php"><i class="fas fa-cog me-2"></i>Settings</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-danger" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        <?php else: ?>
+          <a href="login.php" class="btn btn-sm btn-outline-primary me-2"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
+          <a href="register.php" class="btn btn-sm btn-primary"><i class="fas fa-user-plus me-1"></i> Register</a>
+        <?php endif; ?>
       </div>
     </div>
   </div>
@@ -96,8 +118,25 @@
 
       <!-- Mobile-only login/register buttons -->
       <div class="d-lg-none justify-content-center mt-3 mb-2">
-        <a href="login.php" class="btn btn-outline-primary me-2" style="height: 100%;width: 100%;"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
-        <a href="register.php" class="btn btn-primary mt-2" style="height: 100%;margin:0px;"><i class="fas fa-user-plus me-1"></i> Register</a>
+        <?php if (isset($_SESSION['user_id'])): ?>
+          <div class="dropdown w-100">
+            <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="userDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user me-1"></i>
+              <?php echo htmlspecialchars($_SESSION['first_name']); ?>
+            </button>
+            <ul class="dropdown-menu w-100" aria-labelledby="userDropdownMobile">
+              <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
+              <li><a class="dropdown-item" href="settings.php"><i class="fas fa-cog me-2"></i>Settings</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-danger" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        <?php else: ?>
+          <a href="login.php" class="btn btn-outline-primary me-2" style="height: 100%;width: 100%;"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
+          <a href="register.php" class="btn btn-primary mt-2" style="height: 100%;margin:0px;"><i class="fas fa-user-plus me-1"></i> Register</a>
+        <?php endif; ?>
       </div>
     </div>
   </div>
