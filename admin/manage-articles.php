@@ -141,7 +141,7 @@ $paged_articles = array_slice($articles, $offset, $articles_per_page);
       white-space: nowrap;
       width: 180px;
     }
-    
+
     .filter-row {
       background-color: #f8f9fa;
       border-bottom: 1px solid #dee2e6;
@@ -218,19 +218,6 @@ $paged_articles = array_slice($articles, $offset, $articles_per_page);
                       <?php else: ?>
                         <span class="badge bg-light text-dark">Uncategorized</span>
                       <?php endif; ?>
-
-        <?php else: ?>
-          <div class="p-4 text-center">
-            <div class="mb-3">
-              <i class="bi bi-newspaper text-muted" style="font-size: 3rem;"></i>
-            </div>
-            <h5>No Articles Found</h5>
-            <p class="text-muted">Get started by adding your first article.</p>
-            <a href="add_article.php" class="btn btn-primary">
-              <i class="bi bi-plus-circle me-1"></i> Add New Article
-            </a>
-          </div>
-        <?php endif; ?>
                     </td>
                     <td><?php echo number_format($article['view_count']); ?></td>
                     <td><?php echo date('M d, Y', strtotime($article['created_at'])); ?></td>
@@ -248,7 +235,7 @@ $paged_articles = array_slice($articles, $offset, $articles_per_page);
                       </form>
                     </td>
                     <td class="text-end actions-column">
-                      <a href="../article.php?id=<?php echo $article['id']; ?>" target="_blank" class="btn btn-sm btn-outline-info">
+                      <a href="../article-details.php?id=<?php echo $article['id']; ?>" target="_blank" class="btn btn-sm btn-outline-info">
                         <i class="bi bi-eye"></i> View
                       </a>
                       <a href="edit_article.php?id=<?php echo $article['id']; ?>" class="btn btn-sm btn-primary">
@@ -314,3 +301,36 @@ $paged_articles = array_slice($articles, $offset, $articles_per_page);
               </nav>
             </div>
           <?php endif; ?>
+        <?php else: ?>
+          <div class="p-4 text-center">
+            <div class="mb-3">
+              <i class="bi bi-newspaper text-muted" style="font-size: 3rem;"></i>
+            </div>
+            <h5>No Articles Found</h5>
+            <p class="text-muted">Get started by adding your first article.</p>
+            <a href="add_article.php" class="btn btn-primary">
+              <i class="bi bi-plus-circle me-1"></i> Add New Article
+            </a>
+          </div>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Auto dismiss alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+          const bsAlert = new bootstrap.Alert(alert);
+          bsAlert.close();
+        });
+      }, 5000);
+    });
+  </script>
+</body>
+
+</html>

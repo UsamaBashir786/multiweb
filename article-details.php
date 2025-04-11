@@ -32,13 +32,13 @@ if (empty($errorMsg)) {
 
   if ($result->num_rows > 0) {
     $article = $result->fetch_assoc();
-    
+
     // Update view count
     $updateViewsSql = "UPDATE articles SET view_count = view_count + 1 WHERE id = ?";
     $updateViewsStmt = $conn->prepare($updateViewsSql);
     $updateViewsStmt->bind_param("i", $article['id']);
     $updateViewsStmt->execute();
-    
+
     // Parse tags
     $article_tags = [];
     if (!empty($article['tags'])) {
@@ -46,7 +46,6 @@ if (empty($errorMsg)) {
       // Trim whitespace
       $article_tags = array_map('trim', $article_tags);
     }
-    
   } else {
     $errorMsg = "Article not found";
   }
@@ -63,61 +62,63 @@ if ($article) {
   $relatedStmt->bind_param("ii", $article['category_id'], $article['id']);
   $relatedStmt->execute();
   $relatedResult = $relatedStmt->get_result();
-  
+
   while ($row = $relatedResult->fetch_assoc()) {
     $related_articles[] = $row;
   }
-  
+
   // If not enough related articles by category, fetch by tags
   if (count($related_articles) < 4 && !empty($article_tags)) {
     // Create placeholders for tags (?,?,?...)
     $tag_placeholders = implode(',', array_fill(0, count($article_tags), '?'));
-    
+
     // Build the query with LIKE conditions for each tag
     $tagRelatedSql = "SELECT id, title, slug, image, created_at FROM articles 
-                     WHERE id != ? AND id NOT IN (" . implode(',', array_map(function($a) { return $a['id']; }, $related_articles)) . ")
+                     WHERE id != ? AND id NOT IN (" . implode(',', array_map(function ($a) {
+      return $a['id'];
+    }, $related_articles)) . ")
                      AND (";
-    
+
     $conditions = [];
     foreach ($article_tags as $tag) {
       $conditions[] = "tags LIKE ?";
     }
-    
+
     $tagRelatedSql .= implode(' OR ', $conditions) . ") LIMIT " . (4 - count($related_articles));
-    
+
     $tagRelatedStmt = $conn->prepare($tagRelatedSql);
-    
+
     // Create parameter types and values
     $paramTypes = "i" . str_repeat("s", count($article_tags));
     $paramValues = [$article['id']];
-    
+
     foreach ($article_tags as $tag) {
       $paramValues[] = '%' . $tag . '%';
     }
-    
+
     $tagRelatedStmt->bind_param($paramTypes, ...$paramValues);
     $tagRelatedStmt->execute();
     $tagRelatedResult = $tagRelatedStmt->get_result();
-    
+
     while ($row = $tagRelatedResult->fetch_assoc()) {
       $related_articles[] = $row;
     }
   }
-  
+
   // If still not enough, get most recent articles
   if (count($related_articles) < 4) {
     $excludeIds = [$article['id']];
     foreach ($related_articles as $ra) {
       $excludeIds[] = $ra['id'];
     }
-    
+
     $excludeStr = implode(',', $excludeIds);
-    
+
     $recentSql = "SELECT id, title, slug, image, created_at FROM articles 
                  WHERE id NOT IN ($excludeStr) 
                  ORDER BY created_at DESC LIMIT " . (4 - count($related_articles));
     $recentResult = $conn->query($recentSql);
-    
+
     while ($row = $recentResult->fetch_assoc()) {
       $related_articles[] = $row;
     }
@@ -144,7 +145,7 @@ if ($tags_result && $tags_result->num_rows > 0) {
       }
     }
   }
-  
+
   // Sort by count and take top 10
   arsort($all_tags);
   $popular_tags = array_slice(array_keys($all_tags), 0, 10);
@@ -166,7 +167,7 @@ if ($article) {
   $commentsStmt->bind_param("i", $article['id']);
   $commentsStmt->execute();
   $commentsResult = $commentsStmt->get_result();
-  
+
   while ($row = $commentsResult->fetch_assoc()) {
     // Fetch replies for this comment
     $repliesSql = "SELECT * FROM comments 
@@ -176,15 +177,15 @@ if ($article) {
     $repliesStmt->bind_param("i", $row['id']);
     $repliesStmt->execute();
     $repliesResult = $repliesStmt->get_result();
-    
+
     $row['replies'] = [];
     while ($reply = $repliesResult->fetch_assoc()) {
       $row['replies'][] = $reply;
     }
-    
+
     $comments[] = $row;
   }
-  
+
   // Count total comments including replies
   $countSql = "SELECT COUNT(*) as total FROM comments WHERE story_id = ? AND status = 'approved'";
   $countStmt = $conn->prepare($countSql);
@@ -204,7 +205,7 @@ if (isset($_POST['submit_comment'])) {
   $comment_text = trim($_POST['comment']);
   $parent_id = isset($_POST['parent_id']) ? intval($_POST['parent_id']) : null;
   $article_id = $article['id'];
-  
+
   // Simple validation
   if (empty($name)) {
     $commentErrorMsg = "Name is required";
@@ -218,7 +219,7 @@ if (isset($_POST['submit_comment'])) {
                  VALUES (?, ?, ?, ?, ?, 'pending', NOW())";
     $insertStmt = $conn->prepare($insertSql);
     $insertStmt->bind_param("iisss", $article_id, $parent_id, $name, $email, $comment_text);
-    
+
     if ($insertStmt->execute()) {
       $commentSuccessMsg = "Your comment has been submitted and is awaiting approval.";
     } else {
@@ -242,23 +243,24 @@ if (isset($_POST['submit_comment'])) {
       font-size: 1.1rem;
       line-height: 1.8;
     }
-    
+
     .article-content p {
       margin-bottom: 1.5rem;
     }
-    
-    .article-content h2, .article-content h3 {
+
+    .article-content h2,
+    .article-content h3 {
       font-weight: 700;
       color: #333;
       margin-top: 2rem;
       margin-bottom: 1rem;
     }
-    
+
     blockquote {
       border-radius: 5px;
       border-color: #9B5DE5 !important;
     }
-    
+
     /* Scroll to Top Button */
     .scroll-to-top-btn {
       position: fixed;
@@ -280,55 +282,55 @@ if (isset($_POST['submit_comment'])) {
       justify-content: center;
       cursor: pointer;
     }
-    
+
     .scroll-to-top-btn.visible {
       opacity: 1;
       visibility: visible;
     }
-    
+
     .scroll-to-top-btn:hover {
       background-color: #8a4dd0;
       transform: translateY(-3px);
     }
-    
+
     /* Comment Section Styling */
     .comment-list {
       max-height: 800px;
       overflow-y: auto;
     }
-    
+
     .category-badge {
       background-color: #9B5DE5;
       color: white;
     }
-    
+
     /* Tags */
     .tag-link {
       background-color: #f0f0f0;
       color: #333;
       transition: all 0.3s ease;
     }
-    
+
     .tag-link:hover {
       background-color: #9B5DE5;
       color: white;
     }
-    
+
     /* Related Article Card */
     .related-article-card {
       transition: transform 0.3s ease;
     }
-    
+
     .related-article-card:hover {
       transform: translateY(-5px);
     }
-    
+
     .sidebar-heading {
       border-bottom: 2px solid #9B5DE5;
       padding-bottom: 10px;
       margin-bottom: 20px;
     }
-    
+
     .reply-form {
       display: none;
     }
@@ -444,7 +446,7 @@ if (isset($_POST['submit_comment'])) {
                 <h4 class="mb-2">About <?php echo htmlspecialchars($article['author']); ?></h4>
                 <p class="text-muted mb-2"><?php echo htmlspecialchars($article['author_role']); ?></p>
                 <p>
-                  <?php echo htmlspecialchars($article['author']); ?> is an experienced writer specializing in 
+                  <?php echo htmlspecialchars($article['author']); ?> is an experienced writer specializing in
                   <?php echo !empty($article['category_name']) ? htmlspecialchars($article['category_name']) : 'various topics'; ?>.
                   With years of experience in the field, they bring valuable insights and perspectives to their writing.
                 </p>
@@ -489,10 +491,6 @@ if (isset($_POST['submit_comment'])) {
                       <input type="email" class="form-control" name="email" placeholder="Email" required>
                     </div>
                   </div>
-                  <div class="
-
-
-
                   <div class="mb-3">
                     <textarea class="form-control" name="comment" rows="4" placeholder="Your comment" required></textarea>
                   </div>
@@ -582,7 +580,7 @@ if (isset($_POST['submit_comment'])) {
                   <p class="text-muted mb-0">No comments yet. Be the first to comment!</p>
                 </div>
               <?php endif; ?>
-              
+
               <?php if ($comments_count > 5): ?>
                 <!-- View More Comments Button -->
                 <div class="text-center">
@@ -651,31 +649,32 @@ if (isset($_POST['submit_comment'])) {
               </form>
             </div>
           </div>
+        </div>
 
-          <!-- Social Media -->
-          <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-0">
-              <h5 class="mb-0">Follow Us</h5>
-            </div>
-            <div class="card-body">
-              <div class="d-flex justify-content-between">
-                <a href="#" class="btn btn-outline-secondary d-flex flex-column align-items-center py-3 flex-grow-1 me-2">
-                  <i class="fab fa-facebook-f mb-2"></i>
-                  <span>Facebook</span>
-                </a>
-                <a href="#" class="btn btn-outline-secondary d-flex flex-column align-items-center py-3 flex-grow-1 me-2">
-                  <i class="fab fa-twitter mb-2"></i>
-                  <span>Twitter</span>
-                </a>
-                <a href="#" class="btn btn-outline-secondary d-flex flex-column align-items-center py-3 flex-grow-1">
-                  <i class="fab fa-instagram mb-2"></i>
-                  <span>Instagram</span>
-                </a>
-              </div>
+        <!-- Social Media -->
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white border-0">
+            <h5 class="mb-0">Follow Us</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <a href="#" class="btn btn-outline-secondary d-flex flex-column align-items-center py-3 flex-grow-1 me-2">
+                <i class="fab fa-facebook-f mb-2"></i>
+                <span>Facebook</span>
+              </a>
+              <a href="#" class="btn btn-outline-secondary d-flex flex-column align-items-center py-3 flex-grow-1 me-2">
+                <i class="fab fa-twitter mb-2"></i>
+                <span>Twitter</span>
+              </a>
+              <a href="#" class="btn btn-outline-secondary d-flex flex-column align-items-center py-3 flex-grow-1">
+                <i class="fab fa-instagram mb-2"></i>
+                <span>Instagram</span>
+              </a>
             </div>
           </div>
         </div>
       </div>
+    </div>
     </div>
 
     <!--
@@ -694,31 +693,6 @@ if (isset($_POST['submit_comment'])) {
               </a>
             </div>
           </div>
-          mb-3">
-                    <textarea class="form-control" name="comment" rows="4" placeholder="Your comment" required></textarea>
-                  </div>
-                  <button type="submit" name="submit_comment" class="btn px-4 py-2" style="background-color: #9B5DE5; color: white;">Post Comment</button>
-                </form>
-              </div>
-            </div>
-
-            <!-- Comment List -->
-            <div class="comment-list">
-              <?php if (count($comments) > 0): ?>
-                <?php foreach ($comments as $comment): ?>
-                  <!-- Comment -->
-                  <div class="d-flex mb-4" id="comment-<?php echo $comment['id']; ?>">
-                    <img src="https://www.gravatar.com/avatar/<?php echo md5(strtolower(trim($comment['email']))); ?>?s=50&d=mp" class="rounded-circle me-3" width="50" height="50" alt="Commenter">
-                    <div class="flex-grow-1">
-                      <div class="bg-light p-3 rounded">
-                        <div class="d-flex justify-content-between mb-2">
-                          <h6 class="mb-0 fw-bold"><?php echo htmlspecialchars($comment['name']); ?></h6>
-                          <small class="text-muted"><?php echo date('M d, Y \a\t h:i A', strtotime($comment['created_at'])); ?></small>
-                        </div>
-                        <p class="mb-0"><?php echo nl2br(htmlspecialchars($comment['comment'])); ?></p>
-                      </div>
-                      <div class="d-flex mt-2">
-                        <a href="#" class="reply-btn text-decoration-none me-3" style="color: #9B5DE5;" data-comment-id="<?php echo $comment['id'];<?php
           <div class="row">
             <?php
             // Fetch more articles from same category
@@ -729,7 +703,7 @@ if (isset($_POST['submit_comment'])) {
             $moreStmt->bind_param("ii", $article['category_id'], $article['id']);
             $moreStmt->execute();
             $moreResult = $moreStmt->get_result();
-            
+
             while ($more = $moreResult->fetch_assoc()):
             ?>
               <div class="col-md-3 mb-4">
@@ -757,7 +731,7 @@ if (isset($_POST['submit_comment'])) {
         </div>
       </section>
     <?php endif; ?>
-  
+
   <?php else: ?>
     <!-- Article Not Found -->
     <div class="container mt-5 pt-5">
@@ -792,7 +766,7 @@ if (isset($_POST['submit_comment'])) {
     document.addEventListener('DOMContentLoaded', function() {
       // Show/hide scroll to top button
       const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-      
+
       window.addEventListener('scroll', function() {
         if (window.pageYOffset > 300) {
           scrollToTopBtn.classList.add('visible');
@@ -800,18 +774,18 @@ if (isset($_POST['submit_comment'])) {
           scrollToTopBtn.classList.remove('visible');
         }
       });
-      
+
       scrollToTopBtn.addEventListener('click', function() {
         window.scrollTo({
           top: 0,
           behavior: 'smooth'
         });
       });
-      
+
       // Comment reply functionality
       const replyButtons = document.querySelectorAll('.reply-btn');
       const cancelButtons = document.querySelectorAll('.cancel-reply');
-      
+
       replyButtons.forEach(button => {
         button.addEventListener('click', function(e) {
           e.preventDefault();
@@ -819,14 +793,14 @@ if (isset($_POST['submit_comment'])) {
           document.getElementById(`reply-form-${commentId}`).style.display = 'block';
         });
       });
-      
+
       cancelButtons.forEach(button => {
         button.addEventListener('click', function(e) {
           const commentId = this.getAttribute('data-comment-id');
           document.getElementById(`reply-form-${commentId}`).style.display = 'none';
         });
       });
-      
+
       // Auto dismiss alerts after 5 seconds
       setTimeout(function() {
         const alerts = document.querySelectorAll('.alert');
