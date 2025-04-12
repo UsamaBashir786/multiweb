@@ -66,12 +66,7 @@
   .sidebar-menu .dropdown-toggle {
     cursor: pointer;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-  }
-
-  .sidebar-menu .dropdown-toggle i.dropdown-icon {
-    transition: transform 0.3s;
   }
 
   .sidebar-menu .custom-dropdown-menu {
@@ -214,7 +209,7 @@
 <div class="col-md-2 sidebar" id="sidebar">
   <div class="sidebar-header">
     <h3 class="text-white m-0">Admin Panel</h3>
-    <button class="targeting-btn sidebar-toggle" id="sidebarToggle" class="d-block d-lg-none d-md-none d-sm-block d-xs-block">
+    <button class="targeting-btn sidebar-toggle" id="sidebarToggle">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -236,13 +231,11 @@
     </li>
     <li class="dropdown">
       <div class="dropdown-toggle">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
-            <polyline points="9 11 12 14 22 4"></polyline>
-            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-          </svg>
-          Categories
-        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
+          <polyline points="9 11 12 14 22 4"></polyline>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+        </svg>
+        Categories
       </div>
       <div class="custom-dropdown-menu">
         <a href="add-category.php" class="dropdown-item">Add Category</a>
@@ -250,39 +243,41 @@
     </li>
     <li class="dropdown">
       <div class="dropdown-toggle">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
-          </svg>
-          Stories
-        </div>
-
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        Stories
       </div>
       <div class="custom-dropdown-menu">
         <a href="add_story.php" class="dropdown-item">Add Story</a>
-        <a href="manage-stories.php" class="dropdown-item">Manage Story</a>
-        <!-- <a href="#addArticleCategory" class="dropdown-item">Add Article Category</a> -->
+        <a href="manage-stories.php" class="dropdown-item">Manage Stories</a>
       </div>
     </li>
     <li class="dropdown">
       <div class="dropdown-toggle">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-          Comments
-        </div>
-
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </svg>
+        News
+      </div>
+      <div class="custom-dropdown-menu">
+        <a href="add_news.php" class="dropdown-item">Add News</a>
+        <a href="manage-news.php" class="dropdown-item">Manage News</a>
+      </div>
+    </li>
+    <li class="dropdown">
+      <div class="dropdown-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        Comments
       </div>
       <div class="custom-dropdown-menu">
         <a href="comments.php" class="dropdown-item">All Comments</a>
-        <!-- <a href="manage-comments.php?status=pending" class="dropdown-item">Pending Comments</a> -->
-        <!-- <a href="manage-comments.php?status=approved" class="dropdown-item">Approved Comments</a> -->
-        <!-- <a href="manage-comments.php?status=spam" class="dropdown-item">Spam Comments</a> -->
       </div>
     </li>
     <li>
@@ -296,9 +291,11 @@
     </li>
     <li class="dropdown">
       <div class="dropdown-toggle">
-        <div>
-          Breaking News
-        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
+          <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+          <polyline points="13 2 13 9 20 9"></polyline>
+        </svg>
+        Breaking News
       </div>
       <div class="custom-dropdown-menu">
         <a href="breaking-news.php" class="dropdown-item">Manage Breaking News</a>
@@ -371,22 +368,12 @@
       // Toggle active class on dropdown toggle
       this.classList.toggle('active');
 
-      // Rotate dropdown icon
-      const dropdownIcon = this.querySelector('.dropdown-icon');
-      if (this.classList.contains('active')) {
-        dropdownIcon.style.transform = 'rotate(180deg)';
-      } else {
-        dropdownIcon.style.transform = 'rotate(0)';
-      }
-
       // Close other dropdowns
       dropdownToggles.forEach(otherToggle => {
         if (otherToggle !== this) {
           const otherDropdownMenu = otherToggle.nextElementSibling;
           otherDropdownMenu.classList.remove('show');
           otherToggle.classList.remove('active');
-          const otherDropdownIcon = otherToggle.querySelector('.dropdown-icon');
-          otherDropdownIcon.style.transform = 'rotate(0)';
         }
       });
     });
@@ -441,8 +428,6 @@
 
       dropdownToggles.forEach(toggle => {
         toggle.classList.remove('active');
-        const dropdownIcon = toggle.querySelector('.dropdown-icon');
-        dropdownIcon.style.transform = 'rotate(0)';
       });
     }
   });
